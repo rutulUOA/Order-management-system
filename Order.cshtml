@@ -1,0 +1,51 @@
+﻿@model trialapp.Context.OrderTable
+@{
+    var productslistSL = trialapp.Models.BusinessLogic.GetAllProducts();
+    var userslistSL = trialapp.Models.BusinessLogic.GetAllUsers();
+    ViewBag.Title = "OrderView";
+}
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+@using (Html.BeginForm("PlaceOrder", "Order", FormMethod.Post, new { id = "idFormOrderdetail" }))
+{
+    <div id="divSubPage" class="container" data-s-itemsinstock=  >
+        <div class="form-group">
+            @Html.ValidationMessageFor(m => m.ProductID, "", new { @class = "error" })
+            @*@Html.LabelFor(m => m.ProductID)*@
+            <label>Product Name</label>
+            @Html.DropDownListFor(m => m.Product_table.ID, productslistSL, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <label>User Name</label>
+            @Html.DropDownListFor(m => m.UserTable.ID, userslistSL, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <button id="btnOrder" type="submit" class="btn btn-primary">Order</button>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $('#divSubPage').on('click', '#btnOrder', function (e) {
+            e.preventDefault();
+
+            var url = "Order/PlaceOrder";
+            var data = $('#idFormOrderdetail').serializeArray();
+
+            //if ($("#"))
+
+                $('#divSubPage').load(url, data, function (responseTxt, statusTxt, xhr) {
+                    alert("Order placed successfully");
+                    //if (Application.IsAjaxError(xhr)) {
+                    //    return;
+                    //}
+                });
+        });
+    </script>
+}
